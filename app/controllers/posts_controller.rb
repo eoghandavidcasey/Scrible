@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
 
-	before_action :find_post, only: [:show, :edit, :update, :destroy]
+	before_action :find_post, only: [:show, :edit, :update, :destroy, :upvote, :downvote]
 	before_action :authenticate_user!, except: [:index, :show]
 
 
@@ -9,6 +9,7 @@ class PostsController < ApplicationController
 	end
 
 	def show
+		@comments = Comment.where(post_id: @post)
 		
 	end
 
@@ -41,6 +42,18 @@ class PostsController < ApplicationController
 		@post.destroy
 		redirect_to root_path
 	end
+
+	def upvote
+		@post.upvote_by current_user
+		redirect_to :back
+	end
+
+	def downvote
+		@post.downvote_by current_user
+		redirect_to :back
+	end
+
+
 
 	private 
 
